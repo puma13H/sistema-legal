@@ -4,3 +4,4 @@
 - Commit 3: añadido contenido de trabajo para demostrar actividad en el historial.
 - Commit 4: añadido contenido de trabajo para demostrar actividad en el historial.
 - Commit 5: añadido contenido de trabajo para demostrar actividad en el historial.
+- Commit 6: añadido contenido de trabajo para demostrar actividad en el historial.
