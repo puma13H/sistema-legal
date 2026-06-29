@@ -1,0 +1,59 @@
+========================================
+  CASOS LEGALES - COMO INICIAR TODO
+========================================
+
+PASO 1 (solo una vez)
+---------------------
+Si Node no funciona, instala desde:
+https://nodejs.org  (version LTS)
+
+PASO 2 (cada vez que quieras usar la app)
+-----------------------------------------
+Doble clic en este archivo:
+
+    INICIAR-TODO.bat
+
+Se abriran 2 ventanas negras:
+  - Backend  (espera "Started CasosLegalesApplication")
+  - Frontend (espera "Compiled successfully")
+
+PASO 3
+------
+Abre el navegador en:
+
+    http://localhost:4200
+
+Login ADMIN:
+  Email:    admin@casoslegales.com
+  Password: admin123
+
+Si dice "Credenciales invalidas":
+  1) Verifica que el BACKEND este corriendo (ventana con "Started CasosLegalesApplication")
+  2) Abre http://localhost:8080/api/auth/health debe decir {"status":"ok"}
+  3) Ejecuta REINICIAR-BD.bat y vuelve a INICIAR-TODO.bat
+
+========================================
+INTELLIJ (opcional)
+========================================
+
+Backend:
+  Run -> CasosLegalesApplication
+  (ya usa perfil dev, NO necesita PostgreSQL)
+
+Frontend:
+  Settings -> buscar "node"
+  Node: C:\Program Files\nodejs\node.exe
+  npm:  C:\Program Files\nodejs\npm.cmd
+  Run -> Angular CLI Server
+
+========================================
+NOTA SOBRE RUTAS CON ESPACIOS
+========================================
+
+En PowerShell SIEMPRE usa comillas:
+
+  & "C:\Program Files\nodejs\node.exe" -v
+
+Sin comillas da error "C:\Program no se reconoce"
+
+========================================

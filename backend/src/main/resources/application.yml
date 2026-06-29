@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: casos-legales-api
+  profiles:
+    active: postgres
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+app:
+  jwt:
+    secret: casosLegalesSecretKey2026CambiarEnProduccionMinimo32Chars
+    expiration-ms: 86400000
+  upload-dir: uploads

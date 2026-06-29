@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+dist/
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+backend/uploads/
+backend/data/
+backend/.tools/
+
+# Env
+.env

@@ -1,0 +1,1 @@
+-- Ver database/01-schema.sql (archivo actualizado)
