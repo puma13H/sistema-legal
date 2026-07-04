@@ -11,8 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")
-@CrossOrigin(origins = "http://localhost:4200")
-@PreAuthorize("hasRole('admin')")
 public class ClienteController {
 
     private final ClienteService clienteService;
@@ -22,21 +20,25 @@ public class ClienteController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('admin') or hasRole('abogado')")
     public ResponseEntity<List<ClienteResponse>> list() {
         return ResponseEntity.ok(clienteService.listAll());
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('admin') or hasRole('abogado')")
     public ResponseEntity<CreateUserResponse> create(@Valid @RequestBody ClienteRequest request) {
         return ResponseEntity.ok(clienteService.create(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<ClienteResponse> update(@PathVariable Long id, @Valid @RequestBody ClienteRequest request) {
         return ResponseEntity.ok(clienteService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         clienteService.delete(id);
         return ResponseEntity.noContent().build();

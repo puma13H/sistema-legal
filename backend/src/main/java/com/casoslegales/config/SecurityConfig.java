@@ -49,8 +49,8 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("admin")
-                        .requestMatchers("/api/abogado/**").hasAnyRole("abogado", "admin")
-                        .requestMatchers("/api/cliente/**").hasAnyRole("cliente", "admin")
+                        .requestMatchers("/api/abogados/**").hasAnyRole("abogado", "admin")
+                        .requestMatchers("/api/clientes/**").hasAnyRole("cliente", "admin", "abogado")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
@@ -62,7 +62,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:4200",
+                "http://localhost:4300",
+                "http://localhost:4400"
+        ));
+        config.setAllowedOriginPatterns(List.of("http://localhost:*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

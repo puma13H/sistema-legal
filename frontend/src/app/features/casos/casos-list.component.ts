@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CasoService } from '../../core/services/caso.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Caso } from '../../core/models';
 
 @Component({
@@ -11,8 +12,11 @@ import { Caso } from '../../core/models';
   template: `
     <div class="page-header">
       <div>
-        <h1 class="page-title">Casos</h1>
-        <p class="page-subtitle">Listado de casos legales</p>
+        <h1 class="page-title">{{ auth.hasRole('cliente') ? 'Mis Casos' : 'Casos' }}</h1>
+        <p class="page-subtitle">{{ auth.hasRole('cliente') ? 'Lista de casos asignados a tu cuenta' : 'Listado de casos legales' }}</p>
+      </div>
+      <div *ngIf="auth.hasRole('abogado')">
+        <a routerLink="/casos/nuevo" class="btn btn-primary">Nuevo caso</a>
       </div>
     </div>
 
@@ -60,7 +64,10 @@ export class CasosListComponent implements OnInit {
   casos: Caso[] = [];
   loading = false;
 
-  constructor(private casoService: CasoService) {}
+  constructor(
+    private casoService: CasoService,
+    public auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;

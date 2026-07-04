@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/casos/{casoId}/mensajes")
-@CrossOrigin(origins = "http://localhost:4200")
 public class MensajeController {
 
     private final MensajeService mensajeService;

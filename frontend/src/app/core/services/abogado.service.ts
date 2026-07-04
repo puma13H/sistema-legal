@@ -12,7 +12,7 @@ export class AbogadoService {
   }
 
   create(payload: Partial<Abogado>) {
-    return this.http.post<CreateUserResult>(`${environment.apiUrl}/abogados`, payload);
+    return this.http.post(`${environment.apiUrl}/abogados`, payload, { observe: 'response' as const });
   }
 
   update(id: number, payload: Partial<Abogado>) {

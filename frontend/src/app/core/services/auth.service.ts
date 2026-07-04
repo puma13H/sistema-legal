@@ -22,9 +22,19 @@ export class AuthService {
   }
 
   logout(): void {
+    // set a short message to show on the login page after logout
+    try { sessionStorage.setItem('casos_legales_msg', 'Has cerrado sesión correctamente'); } catch {}
     localStorage.removeItem(this.storageKey);
     this.currentUser.set(null);
     this.router.navigate(['/login']);
+  }
+
+  updateProfile(name: string, email: string): void {
+    const current = this.currentUser();
+    if (!current) return;
+    const updated = { ...current, name, email };
+    this.currentUser.set(updated);
+    localStorage.setItem(this.storageKey, JSON.stringify(updated));
   }
 
   getToken(): string | null {

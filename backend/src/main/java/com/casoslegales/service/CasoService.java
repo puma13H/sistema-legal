@@ -45,9 +45,22 @@ public class CasoService {
         };
     }
 
-    public CasoResponse create(CasoRequest request, String email) {
-        Abogado abogado = abogadoRepository.findByUserId(getUserId(email))
-                .orElseThrow(() -> new RuntimeException("Abogado no encontrado"));
+    public CasoResponse create(CasoRequest request, String email, String role) {
+        Abogado abogado;
+        if ("admin".equals(role)) {
+            if (request.abogadoId() == null) {
+                throw new RuntimeException("Abogado es requerido");
+            }
+            abogado = abogadoRepository.findById(request.abogadoId())
+                    .orElseThrow(() -> new RuntimeException("Abogado no encontrado"));
+        } else {
+            abogado = abogadoRepository.findByUserId(getUserId(email))
+                    .orElseThrow(() -> new RuntimeException("Abogado no encontrado"));
+            if (request.abogadoId() != null && !request.abogadoId().equals(abogado.getId())) {
+                throw new RuntimeException("No puedes asignar otro abogado");
+            }
+        }
+
         Cliente cliente = clienteRepository.findById(request.clienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 

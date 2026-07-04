@@ -6,9 +6,14 @@ export const roleGuard = (...roles: string[]): CanActivateFn => () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
+  if (!auth.hasValidToken()) {
+    return router.createUrlTree(['/login']);
+  }
+
   if (auth.hasRole(...roles)) {
     return true;
   }
 
-  return router.createUrlTree(['/login']);
+  const currentRole = auth.currentUser()?.role;
+  return currentRole ? router.createUrlTree(['/dashboard', currentRole]) : router.createUrlTree(['/login']);
 };

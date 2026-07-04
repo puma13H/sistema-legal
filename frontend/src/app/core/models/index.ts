@@ -4,6 +4,7 @@ export interface AuthUser {
   email: string;
   role: 'admin' | 'abogado' | 'cliente';
   token: string;
+  avatarUrl?: string;
 }
 
 export interface Caso {

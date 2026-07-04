@@ -18,6 +18,12 @@ import { Cliente } from '../../core/models';
 
     <div class="form-card">
       <h3>Registrar nuevo cliente</h3>
+      <div *ngIf="errorMsg" class="alert alert-error" style="margin-bottom:1rem; padding:1rem; background-color:#fee; color:#c00; border-radius:4px">
+        ❌ {{ errorMsg }}
+      </div>
+      <div *ngIf="successMsg" class="alert alert-success" style="margin-bottom:1rem; padding:1rem; background-color:#efe; color:#060; border-radius:4px">
+        ✓ {{ successMsg }}
+      </div>
       <form (ngSubmit)="crear()">
         <div class="form-group">
           <label>Nombre completo</label>
@@ -66,20 +72,61 @@ export class ClientesComponent implements OnInit {
   clientes: Cliente[] = [];
   form = { nombre: '', telefono: '', email: '', direccion: '' };
   passwordInfo = '';
+  errorMsg = '';
+  successMsg = '';
 
   constructor(private clienteService: ClienteService) {}
 
   ngOnInit(): void { this.load(); }
 
   load(): void {
-    this.clienteService.list().subscribe(c => this.clientes = c);
+    this.clienteService.list().subscribe({
+      next: c => this.clientes = c,
+      error: err => console.error('Error al cargar clientes:', err)
+    });
   }
 
   crear(): void {
-    this.clienteService.create(this.form).subscribe(res => {
-      this.passwordInfo = res.passwordTemporal;
-      this.form = { nombre: '', telefono: '', email: '', direccion: '' };
-      this.load();
+    this.errorMsg = '';
+    this.successMsg = '';
+    
+    this.clienteService.create(this.form).subscribe({
+      next: resp => {
+        // resp is HttpResponse<any> when using observe:'response'
+        const status = resp.status;
+        const body: any = resp.body;
+        if (status >= 200 && status < 300) {
+          // handle JSON body with passwordTemporal or accept text/plain
+          if (body && typeof body === 'object' && (body.passwordTemporal || body.email)) {
+            this.passwordInfo = body.passwordTemporal ?? '';
+            this.successMsg = `Cliente creado. Email: ${body.email ?? ''}`;
+          } else if (typeof body === 'string' && body.trim()) {
+            this.successMsg = `Cliente creado: ${body}`;
+          } else {
+            this.successMsg = 'Cliente creado correctamente';
+          }
+          this.form = { nombre: '', telefono: '', email: '', direccion: '' };
+          this.load();
+        } else {
+          this.errorMsg = `Error: ${status}`;
+        }
+      },
+      error: err => {
+        console.error('Error al crear cliente:', err);
+        if (err.error) {
+          if (typeof err.error === 'string') {
+            this.errorMsg = err.error;
+          } else if (err.error.message) {
+            this.errorMsg = err.error.message;
+          } else {
+            this.errorMsg = JSON.stringify(err.error);
+          }
+        } else if (err.statusText) {
+          this.errorMsg = err.statusText;
+        } else {
+          this.errorMsg = 'Error desconocido al crear cliente';
+        }
+      }
     });
   }
 

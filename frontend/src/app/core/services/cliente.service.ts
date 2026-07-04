@@ -12,7 +12,8 @@ export class ClienteService {
   }
 
   create(payload: Partial<Cliente>) {
-    return this.http.post<CreateUserResult>(`${environment.apiUrl}/clientes`, payload);
+    // return full response so frontend can handle non-JSON responses gracefully
+    return this.http.post(`${environment.apiUrl}/clientes`, payload, { observe: 'response' as const });
   }
 
   update(id: number, payload: Partial<Cliente>) {

@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/abogados")
-@CrossOrigin(origins = "http://localhost:4200")
 @PreAuthorize("hasRole('admin')")
 public class AbogadoController {
 

@@ -43,6 +43,12 @@ import { Abogado } from '../../core/models';
         <div *ngIf="passwordInfo" class="alert alert-success" style="margin-top:1rem">
           Contraseña temporal: <strong>{{ passwordInfo }}</strong>
         </div>
+        <div *ngIf="successMsg" class="alert alert-success" style="margin-top:1rem">
+          {{ successMsg }}
+        </div>
+        <div *ngIf="errorMsg" class="alert alert-error" style="margin-top:1rem">
+          {{ errorMsg }}
+        </div>
       </form>
     </div>
 
@@ -71,20 +77,50 @@ export class AbogadosComponent implements OnInit {
   abogados: Abogado[] = [];
   form = { nombre: '', telefono: '', email: '', especialidad: '', direccion: '' };
   passwordInfo = '';
+  successMsg = '';
+  errorMsg = '';
 
   constructor(private abogadoService: AbogadoService) {}
 
   ngOnInit(): void { this.load(); }
 
   load(): void {
-    this.abogadoService.list().subscribe(a => this.abogados = a);
+    this.abogadoService.list().subscribe({ next: a => this.abogados = a, error: err => console.error('Error al cargar abogados:', err) });
   }
 
   crear(): void {
-    this.abogadoService.create(this.form).subscribe(res => {
-      this.passwordInfo = res.passwordTemporal;
-      this.form = { nombre: '', telefono: '', email: '', especialidad: '', direccion: '' };
-      this.load();
+    this.errorMsg = '';
+    this.successMsg = '';
+    this.passwordInfo = '';
+
+    this.abogadoService.create(this.form).subscribe({
+      next: resp => {
+        const body: any = resp.body;
+        if (body && typeof body === 'object') {
+          this.passwordInfo = body.passwordTemporal ?? '';
+          this.successMsg = `Abogado creado correctamente${body.email ? ' (' + body.email + ')' : ''}`;
+        } else {
+          this.successMsg = 'Abogado creado correctamente';
+        }
+        this.form = { nombre: '', telefono: '', email: '', especialidad: '', direccion: '' };
+        this.load();
+      },
+      error: err => {
+        console.error('Error al crear abogado:', err);
+        if (err.error) {
+          if (typeof err.error === 'string') {
+            this.errorMsg = err.error;
+          } else if (err.error.message) {
+            this.errorMsg = err.error.message;
+          } else {
+            this.errorMsg = JSON.stringify(err.error);
+          }
+        } else if (err.statusText) {
+          this.errorMsg = err.statusText;
+        } else {
+          this.errorMsg = 'Error desconocido al crear abogado';
+        }
+      }
     });
   }
 

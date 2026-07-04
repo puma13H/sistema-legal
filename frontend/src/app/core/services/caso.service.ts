@@ -15,7 +15,7 @@ export class CasoService {
     return this.http.get<Caso>(`${environment.apiUrl}/casos/${id}`);
   }
 
-  create(payload: Partial<Caso> & { clienteId: number }) {
+  create(payload: Partial<Caso> & { clienteId: number; abogadoId?: number }) {
     return this.http.post<Caso>(`${environment.apiUrl}/casos`, payload);
   }
 
